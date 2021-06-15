@@ -60,3 +60,40 @@ body {
   font-size: 0.75rem;
   max-width: 200px;
 }
+
+.arrow-up,
+.arrow-down,
+.arrow-left,
+.arrow-right {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+.arrow-up {
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+
+  border-bottom: 5px solid #000;
+}
+
+.arrow-down {
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+
+  border-top: 5px solid #000;
+}
+
+.arrow-right {
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+
+  border-left: 5px solid #000;
+}
+
+.arrow-left {
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+
+  border-right: 5px solid #000;
+}

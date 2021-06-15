@@ -33,20 +33,34 @@ const MAP_POSITIONS_TO_FUNCTIONS = {
   right: positionTooltipRight,
 };
 
+const MAP_POSITIONS_TO_ARROWS = {
+  top: positionArrowTop,
+  topLeft: positionArrowTopLeft,
+  topRight: positionArrowTopRight,
+  bottom: positionArrowBottom,
+  bottomLeft: positionArrowBottomLeft,
+  bottomRight: positionArrowBottomRight,
+  left: positionArrowLeft,
+  right: positionArrowRight,
+};
+
 addGlobalEventListener('mouseover', '[data-tooltip]', e => {
   const tooltip = createTooltip(e.target);
   tooltipContainer.append(tooltip);
-  positionTooltip(e.target, tooltip);
+  const arrow = createArrow();
+  tooltipContainer.append(arrow);
+  positionTooltip(e.target, tooltip, arrow);
   e.target.addEventListener(
     'mouseleave',
     () => {
       tooltip.remove();
+      arrow.remove();
     },
     { once: true }
   );
 });
 
-function positionTooltip(element, tooltip) {
+function positionTooltip(element, tooltip, arrow) {
   const elementRect = element.getBoundingClientRect();
   const tooltipRect = tooltip.getBoundingClientRect();
   for (let i = 0; i < POSITIONS.length; i++) {
@@ -55,6 +69,7 @@ function positionTooltip(element, tooltip) {
       positionFunction &&
       positionFunction(elementRect, tooltip, tooltipRect)
     ) {
+      positionArrow(arrow, POSITIONS[i], elementRect);
       return;
     }
   }
@@ -228,4 +243,92 @@ function createTooltip(element) {
   tooltip.classList.add('tooltip');
   tooltip.innerText = element.dataset.tooltip;
   return tooltip;
+}
+
+function positionArrow(arrow, position, elementRect) {
+  styleArrow(arrow, position);
+  resetArrow(arrow);
+  MAP_POSITIONS_TO_ARROWS[position](arrow, elementRect);
+}
+
+function positionArrowTop(arrow, elementRect) {
+  const arrowRect = arrow.getBoundingClientRect();
+  arrow.style.top = `${elementRect.top - spacing}px`;
+  arrow.style.left = `${
+    elementRect.left + elementRect.width / 2 - arrowRect.width / 2
+  }px`;
+}
+function positionArrowTopLeft(arrow, elementRect) {
+  const arrowRect = arrow.getBoundingClientRect();
+  arrow.style.top = `${elementRect.top - spacing}px`;
+  arrow.style.left = `${elementRect.left - arrowRect.width / 2}px`;
+}
+function positionArrowTopRight(arrow, elementRect) {
+  const arrowRect = arrow.getBoundingClientRect();
+  arrow.style.top = `${elementRect.top - spacing}px`;
+  arrow.style.left = `${elementRect.right - arrowRect.width / 2}px`;
+}
+function positionArrowBottom(arrow, elementRect) {
+  const arrowRect = arrow.getBoundingClientRect();
+  arrow.style.top = `${elementRect.bottom + spacing - arrowRect.height}px`;
+  arrow.style.left = `${
+    elementRect.left + elementRect.width / 2 - arrowRect.width / 2
+  }px`;
+}
+function positionArrowBottomLeft(arrow, elementRect) {
+  const arrowRect = arrow.getBoundingClientRect();
+  arrow.style.top = `${elementRect.bottom + spacing - arrowRect.height}px`;
+  arrow.style.left = `${elementRect.left - arrowRect.width / 2}px`;
+}
+function positionArrowBottomRight(arrow, elementRect) {
+  const arrowRect = arrow.getBoundingClientRect();
+  arrow.style.top = `${elementRect.bottom + spacing - arrowRect.height}px`;
+  arrow.style.left = `${elementRect.right - arrowRect.width / 2}px`;
+}
+function positionArrowLeft(arrow, elementRect) {
+  const arrowRect = arrow.getBoundingClientRect();
+  arrow.style.left = `${elementRect.left - spacing}px`;
+  arrow.style.top = `${
+    elementRect.top + elementRect.height / 2 - arrowRect.height / 2
+  }px`;
+}
+function positionArrowRight(arrow, elementRect) {
+  const arrowRect = arrow.getBoundingClientRect();
+  arrow.style.left = `${elementRect.right + spacing - arrowRect.width}px`;
+  arrow.style.top = `${
+    elementRect.top + elementRect.height / 2 - arrowRect.height / 2
+  }px`;
+}
+
+function resetArrow(arrow) {
+  arrow.style.top = 'initial';
+  arrow.style.right = 'initial';
+  arrow.style.bottom = 'initial';
+  arrow.style.left = 'initial';
+}
+
+function createArrow() {
+  const arrow = document.createElement('div');
+  return arrow;
+}
+
+function styleArrow(arrow, position) {
+  switch (position) {
+    case 'top':
+    case 'topLeft':
+    case 'topRight':
+      arrow.classList.add('arrow-down');
+      break;
+    case 'bottom':
+    case 'bottomLeft':
+    case 'bottomRight':
+      arrow.classList.add('arrow-up');
+      break;
+    case 'left':
+      arrow.classList.add('arrow-right');
+      break;
+    case 'right':
+      arrow.classList.add('arrow-left');
+      break;
+  }
 }
