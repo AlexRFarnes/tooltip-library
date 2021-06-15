@@ -4,12 +4,31 @@ const tooltipContainer = document.createElement('div');
 tooltipContainer.classList.add('tooltip-container');
 document.body.append(tooltipContainer);
 const DEFAULT_SPACING = 5;
-const userSpacing = document.querySelector('[data-spacing]').dataset.spacing;
+const userSpacing = document
+  .querySelector('[data-spacing]')
+  .dataset.spacing.split('|');
 const spacing = parseInt(userSpacing) || DEFAULT_SPACING;
-const POSITIONS = ['top', 'bottom', 'left', 'right'];
+const userPositions = document
+  .querySelector('[data-positions]')
+  .dataset.positions.split('|');
+const POSITIONS = [
+  ...userPositions,
+  'top',
+  'topLeft',
+  'topRight',
+  'bottom',
+  'bottomLeft',
+  'bottomRight',
+  'left',
+  'right',
+];
 const MAP_POSITIONS_TO_FUNCTIONS = {
   top: positionTooltipTop,
+  topLeft: positionTooltipTopLeft,
+  topRight: positionTooltipTopRight,
   bottom: positionTooltipBottom,
+  bottomLeft: positionTooltipBottomLeft,
+  bottomRight: positionTooltipBottomRight,
   left: positionTooltipLeft,
   right: positionTooltipRight,
 };
@@ -29,16 +48,19 @@ addGlobalEventListener('mouseover', '[data-tooltip]', e => {
 
 function positionTooltip(element, tooltip) {
   const elementRect = element.getBoundingClientRect();
-  if (positionTooltipTop(elementRect, tooltip)) {
-    return;
-  } else {
-    positionTooltipBottom(elementRect, tooltip);
-    return;
+  const tooltipRect = tooltip.getBoundingClientRect();
+  for (let i = 0; i < POSITIONS.length; i++) {
+    const positionFunction = MAP_POSITIONS_TO_FUNCTIONS[POSITIONS[i]];
+    if (
+      positionFunction &&
+      positionFunction(elementRect, tooltip, tooltipRect)
+    ) {
+      return;
+    }
   }
 }
 
-function positionTooltipTop(elementRect, tooltip) {
-  const tooltipRect = tooltip.getBoundingClientRect();
+function positionTooltipTop(elementRect, tooltip, tooltipRect) {
   tooltip.style.top = `${elementRect.top - tooltipRect.height - spacing}px`;
   tooltip.style.left = `${
     elementRect.left + elementRect.width / 2 - tooltipRect.width / 2
@@ -56,14 +78,39 @@ function positionTooltipTop(elementRect, tooltip) {
   }
 
   if (bounds.left) {
-    console.log('left');
     tooltip.style.left = `${spacing}px`;
   }
   return true;
 }
 
-function positionTooltipBottom(elementRect, tooltip) {
-  const tooltipRect = tooltip.getBoundingClientRect();
+function positionTooltipTopLeft(elementRect, tooltip, tooltipRect) {
+  tooltip.style.top = `${elementRect.top - tooltipRect.height - spacing}px`;
+  tooltip.style.left = `${elementRect.left - tooltipRect.width + spacing}px`;
+
+  // Send the tooltip instead of its rect because the rect is initially at left 0 and top 0
+  const bounds = isOutOfBounds(tooltip);
+  if (bounds.top || bounds.left) {
+    resetPosition(tooltip);
+    return false;
+  }
+
+  return true;
+}
+
+function positionTooltipTopRight(elementRect, tooltip, tooltipRect) {
+  tooltip.style.top = `${elementRect.top - tooltipRect.height - spacing}px`;
+  tooltip.style.left = `${elementRect.right - spacing}px`;
+
+  // Send the tooltip instead of its rect because the rect is initially at left 0 and top 0
+  const bounds = isOutOfBounds(tooltip);
+  if (bounds.top || bounds.right) {
+    resetPosition(tooltip);
+    return false;
+  }
+  return true;
+}
+
+function positionTooltipBottom(elementRect, tooltip, tooltipRect) {
   tooltip.style.top = `${elementRect.bottom + spacing}px`;
   tooltip.style.left = `${
     elementRect.left + elementRect.width / 2 - tooltipRect.width / 2
@@ -81,14 +128,82 @@ function positionTooltipBottom(elementRect, tooltip) {
   }
 
   if (bounds.left) {
-    console.log('left');
     tooltip.style.left = `${spacing}px`;
   }
   return true;
 }
 
-function positionTooltipLeft(elementRect, tooltip) {}
-function positionTooltipRight(elementRect, tooltip) {}
+function positionTooltipBottomLeft(elementRect, tooltip, tooltipRect) {
+  tooltip.style.top = `${elementRect.bottom + spacing}px`;
+  tooltip.style.left = `${elementRect.left - tooltipRect.width + spacing}px`;
+
+  // Send the tooltip instead of its rect because the rect is initially at left 0 and top 0
+  const bounds = isOutOfBounds(tooltip);
+  if (bounds.bottom || bounds.left) {
+    resetPosition(tooltip);
+    return false;
+  }
+
+  return true;
+}
+
+function positionTooltipBottomRight(elementRect, tooltip, tooltipRect) {
+  tooltip.style.top = `${elementRect.bottom + spacing}px`;
+  tooltip.style.left = `${elementRect.right - spacing}px`;
+
+  // Send the tooltip instead of its rect because the rect is initially at left 0 and top 0
+  const bounds = isOutOfBounds(tooltip);
+  if (bounds.bottom || bounds.right) {
+    resetPosition(tooltip);
+    return false;
+  }
+  return true;
+}
+
+function positionTooltipLeft(elementRect, tooltip, tooltipRect) {
+  tooltip.style.top = `${
+    elementRect.top + elementRect.height / 2 - tooltipRect.height / 2
+  }px`;
+  tooltip.style.left = `${elementRect.left - tooltipRect.width - spacing}px`;
+
+  // Send the tooltip instead of its rect because the rect is initially at left 0 and top 0
+  const bounds = isOutOfBounds(tooltip);
+  if (bounds.left) {
+    resetPosition(tooltip);
+    return false;
+  }
+  if (bounds.bottom) {
+    tooltip.style.bottom = `${spacing}px`;
+    tooltip.style.top = 'initial';
+  }
+
+  if (bounds.top) {
+    tooltip.style.top = `${spacing}px`;
+  }
+  return true;
+}
+function positionTooltipRight(elementRect, tooltip, tooltipRect) {
+  tooltip.style.top = `${
+    elementRect.top + elementRect.height / 2 - tooltipRect.height / 2
+  }px`;
+  tooltip.style.left = `${elementRect.right + spacing}px`;
+
+  // Send the tooltip instead of its rect because the rect is initially at left 0 and top 0
+  const bounds = isOutOfBounds(tooltip);
+  if (bounds.right) {
+    resetPosition(tooltip);
+    return false;
+  }
+  if (bounds.bottom) {
+    tooltip.style.bottom = `${spacing}px`;
+    tooltip.style.top = 'initial';
+  }
+
+  if (bounds.top) {
+    tooltip.style.top = `${spacing}px`;
+  }
+  return true;
+}
 
 function isOutOfBounds(tooltip) {
   const tooltipRect = tooltip.getBoundingClientRect();
