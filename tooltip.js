@@ -100,9 +100,10 @@ function positionTooltipTop(elementRect, tooltip, tooltipRect) {
 
 function positionTooltipTopLeft(elementRect, tooltip, tooltipRect) {
   tooltip.style.top = `${elementRect.top - tooltipRect.height - spacing}px`;
-  tooltip.style.left = `${elementRect.left - tooltipRect.width + spacing}px`;
+  tooltip.style.left = `${
+    elementRect.left + elementRect.width / 2 - tooltipRect.width
+  }px`;
 
-  // Send the tooltip instead of its rect because the rect is initially at left 0 and top 0
   const bounds = isOutOfBounds(tooltip);
   if (bounds.top || bounds.left) {
     resetPosition(tooltip);
@@ -114,9 +115,8 @@ function positionTooltipTopLeft(elementRect, tooltip, tooltipRect) {
 
 function positionTooltipTopRight(elementRect, tooltip, tooltipRect) {
   tooltip.style.top = `${elementRect.top - tooltipRect.height - spacing}px`;
-  tooltip.style.left = `${elementRect.right - spacing}px`;
+  tooltip.style.left = `${elementRect.left + elementRect.width / 2}px`;
 
-  // Send the tooltip instead of its rect because the rect is initially at left 0 and top 0
   const bounds = isOutOfBounds(tooltip);
   if (bounds.top || bounds.right) {
     resetPosition(tooltip);
@@ -131,7 +131,6 @@ function positionTooltipBottom(elementRect, tooltip, tooltipRect) {
     elementRect.left + elementRect.width / 2 - tooltipRect.width / 2
   }px`;
 
-  // Send the tooltip instead of its rect because the rect is initially at left 0 and top 0
   const bounds = isOutOfBounds(tooltip);
   if (bounds.bottom) {
     resetPosition(tooltip);
@@ -150,9 +149,10 @@ function positionTooltipBottom(elementRect, tooltip, tooltipRect) {
 
 function positionTooltipBottomLeft(elementRect, tooltip, tooltipRect) {
   tooltip.style.top = `${elementRect.bottom + spacing}px`;
-  tooltip.style.left = `${elementRect.left - tooltipRect.width + spacing}px`;
+  tooltip.style.left = `${
+    elementRect.left + elementRect.width / 2 - tooltipRect.width
+  }px`;
 
-  // Send the tooltip instead of its rect because the rect is initially at left 0 and top 0
   const bounds = isOutOfBounds(tooltip);
   if (bounds.bottom || bounds.left) {
     resetPosition(tooltip);
@@ -164,9 +164,8 @@ function positionTooltipBottomLeft(elementRect, tooltip, tooltipRect) {
 
 function positionTooltipBottomRight(elementRect, tooltip, tooltipRect) {
   tooltip.style.top = `${elementRect.bottom + spacing}px`;
-  tooltip.style.left = `${elementRect.right - spacing}px`;
+  tooltip.style.left = `${elementRect.left + elementRect.width / 2}px`;
 
-  // Send the tooltip instead of its rect because the rect is initially at left 0 and top 0
   const bounds = isOutOfBounds(tooltip);
   if (bounds.bottom || bounds.right) {
     resetPosition(tooltip);
@@ -181,7 +180,6 @@ function positionTooltipLeft(elementRect, tooltip, tooltipRect) {
   }px`;
   tooltip.style.left = `${elementRect.left - tooltipRect.width - spacing}px`;
 
-  // Send the tooltip instead of its rect because the rect is initially at left 0 and top 0
   const bounds = isOutOfBounds(tooltip);
   if (bounds.left) {
     resetPosition(tooltip);
@@ -203,7 +201,6 @@ function positionTooltipRight(elementRect, tooltip, tooltipRect) {
   }px`;
   tooltip.style.left = `${elementRect.right + spacing}px`;
 
-  // Send the tooltip instead of its rect because the rect is initially at left 0 and top 0
   const bounds = isOutOfBounds(tooltip);
   if (bounds.right) {
     resetPosition(tooltip);
@@ -261,12 +258,16 @@ function positionArrowTop(arrow, elementRect) {
 function positionArrowTopLeft(arrow, elementRect) {
   const arrowRect = arrow.getBoundingClientRect();
   arrow.style.top = `${elementRect.top - spacing}px`;
-  arrow.style.left = `${elementRect.left - arrowRect.width / 2}px`;
+  arrow.style.left = `${
+    elementRect.left + elementRect.width / 2 - arrowRect.width * 2
+  }px`;
 }
 function positionArrowTopRight(arrow, elementRect) {
   const arrowRect = arrow.getBoundingClientRect();
   arrow.style.top = `${elementRect.top - spacing}px`;
-  arrow.style.left = `${elementRect.right - arrowRect.width / 2}px`;
+  arrow.style.left = `${
+    elementRect.right - elementRect.width / 2 + arrowRect.width
+  }px`;
 }
 function positionArrowBottom(arrow, elementRect) {
   const arrowRect = arrow.getBoundingClientRect();
@@ -278,12 +279,16 @@ function positionArrowBottom(arrow, elementRect) {
 function positionArrowBottomLeft(arrow, elementRect) {
   const arrowRect = arrow.getBoundingClientRect();
   arrow.style.top = `${elementRect.bottom + spacing - arrowRect.height}px`;
-  arrow.style.left = `${elementRect.left - arrowRect.width / 2}px`;
+  arrow.style.left = `${
+    elementRect.left + elementRect.width / 2 - arrowRect.width * 2
+  }px`;
 }
 function positionArrowBottomRight(arrow, elementRect) {
   const arrowRect = arrow.getBoundingClientRect();
   arrow.style.top = `${elementRect.bottom + spacing - arrowRect.height}px`;
-  arrow.style.left = `${elementRect.right - arrowRect.width / 2}px`;
+  arrow.style.left = `${
+    elementRect.right - elementRect.width / 2 + arrowRect.width
+  }px`;
 }
 function positionArrowLeft(arrow, elementRect) {
   const arrowRect = arrow.getBoundingClientRect();

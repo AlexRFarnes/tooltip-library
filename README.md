@@ -1,6 +1,6 @@
 # Tooltip library
 
-> An advanced tooltip library where the tooltip dynamically positions itself based on where the element is and on the space available, so it is always on the screen.
+> A tooltip library where the tooltip dynamically positions itself based on where the element is and on the space available, so it is always on the screen.
 
 ## Table of contents
 
@@ -14,7 +14,7 @@
 
 ## General info
 
-
+A tooltip library where the tooltip dynamically positions itself based on where the element is and on the space available, so it is always on the screen. The library follows a sequence of Top, Bottom, Left, Right but also allows the user to define the order of positions to try. Also the user can define a spacing value to give some margin to the tooltip. It includes the four positions plus the four corners, top left, top right, bottom left and bottom right. The tooltip also displays an arrow pointing to the element and its position is also determined dynamically based on the tooltip position. 
 
 ## Screenshots
 
@@ -32,7 +32,10 @@
 
 List of features ready and TODOs for future development
 
-- 
+- Dynamically positioned tooltip
+- User can set the order of positions
+- User can change the spacing
+- Dynamically positioned tooltip's arrow
 
 ## Status
 
@@ -40,7 +43,7 @@ Project is: _finished_.
 
 ## Inspiration
 
-Project based on [JavaScript Simplified by Kyle Cook](https://javascriptsimplified.com/) with the additional functionality to include 4 more positions and the tooltip arrow positioning also based on the tooltip's position.
+Project based on [JavaScript Simplified by Kyle Cook](https://javascriptsimplified.com/) with the additional functionality to include 4 more positions and the tooltip's arrow dynamically positions also based on the tooltip's position.
 
 ## Contact
 
