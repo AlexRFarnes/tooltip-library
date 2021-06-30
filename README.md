@@ -18,8 +18,8 @@ A tooltip library where the tooltip dynamically positions itself based on where 
 
 ## Screenshots
 
-![Screenshot]()
-[Demo]()
+![tooltip-library](https://user-images.githubusercontent.com/57517804/123953075-66c13200-d9d9-11eb-8187-08160449535f.jpg)
+[Demo](https://laughing-rosalind-b3f505.netlify.app/)
 
 ## Technologies
 
